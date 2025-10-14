@@ -1,0 +1,33 @@
+name: Harvest Project YAMLs
+on:
+schedule:
+- cron: "0 * * * *" # hourly
+workflow_dispatch:
+jobs:
+harvest:
+runs-on: ubuntu-latest
+permissions:
+contents: read
+steps:
+- uses: actions/checkout@v4
+- name: List & clone org repos
+env:
+GH_TOKEN: ${{ secrets.ORG_READ_TOKEN }}
+ORG: ${{ github.repository_owner }}
+run: |
+mkdir -p repos && cd repos
+gh repo list "$ORG" --limit 200 --json name | jq -r '.[].name' \
+| while read R; do gh repo clone "$ORG/$R" "$R" || true; done
+- name: Harvest → Snowflake
+uses: actions/setup-python@v5
+with: { python-version: '3.11' }
+- run: pip install -r requirements.txt
+- env:
+SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
+SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+SNOWFLAKE_DATABASE: METADATA
+SNOWFLAKE_SCHEMA: LINEAGE
+run: python scripts/harvest.py

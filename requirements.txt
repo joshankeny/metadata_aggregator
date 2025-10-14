@@ -1,0 +1,6 @@
+pyyaml
+snowflake-connector-python
+pandas
+networkx
+pyvis
+streamlit
