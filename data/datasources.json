@@ -1,0 +1,68 @@
+[
+  {
+    "repo": "NR-2025-001-ptagis-recap-to-snowflake",
+    "project_key": "NR-2025-001-ptagis-recap-to-snowflake",
+    "project_name": "NR-2025-001-ptagis-recap-to-snowflake",
+    "discovered_via": "data_assets",
+    "source_name": "GEN_NR_ADMIN_PASSAGE_PTAGIS_RECAP_DAILY_2025.fmw",
+    "system": "FME",
+    "type": "Workbench",
+    "url": "https://fme.tacoma.lcl/fmeserver/workspaces/run/A-TPU-PWR/GEN_NR_ADMIN_PASSAGE_PTAGIS_RECAP_DAILY_2025.fmw",
+    "notes": ""
+  },
+  {
+    "repo": "NR-2025-001-ptagis-recap-to-snowflake",
+    "project_key": "NR-2025-001-ptagis-recap-to-snowflake",
+    "project_name": "NR-2025-001-ptagis-recap-to-snowflake",
+    "discovered_via": "data_assets",
+    "source_name": "PTAGIS_RECAP_2025",
+    "system": "PTAGIS",
+    "type": "json",
+    "url": "https://api.ptagis.org/reporting/reports/jankeny/file/TPU_RECAP_2025.csv",
+    "notes": ""
+  },
+  {
+    "repo": "NR-2025-001-ptagis-recap-to-snowflake",
+    "project_key": "NR-2025-001-ptagis-recap-to-snowflake",
+    "project_name": "NR-2025-001-ptagis-recap-to-snowflake",
+    "discovered_via": "data_assets",
+    "source_name": "PWR.FISH.ADMIN_PASSAGE_PTAGIS_RECAP",
+    "system": "Snowflake",
+    "type": "Database",
+    "url": "https://app.snowflake.com/mjajtac/tacoma/#/data/databases/PWR/schemas/FISH/table/ADMIN_PASSAGE_PTAGIS_RECAP",
+    "notes": ""
+  },
+  {
+    "repo": "NR-2025-002-ptagis-tagging-to-snowflake",
+    "project_key": "NR-2025-002-ptagis-tagging-to-snowflake",
+    "project_name": "NR-2025-002-ptagis-tagging-to-snowflake",
+    "discovered_via": "data_assets",
+    "source_name": "GEN_NR_ADMIN_PASSAGE_PTAGIS_TAGGING_DAILY_2025.fmw",
+    "system": "FME",
+    "type": "Workbench",
+    "url": "https://fme.tacoma.lcl/fmeserver/workspaces/run/A-TPU-PWR/GEN_NR_ADMIN_PASSAGE_PTAGIS_TAGGING_DAILY_2025.fmw",
+    "notes": ""
+  },
+  {
+    "repo": "NR-2025-002-ptagis-tagging-to-snowflake",
+    "project_key": "NR-2025-002-ptagis-tagging-to-snowflake",
+    "project_name": "NR-2025-002-ptagis-tagging-to-snowflake",
+    "discovered_via": "data_assets",
+    "source_name": "PTAGIS_TAGGING_2025",
+    "system": "PTAGIS",
+    "type": "json",
+    "url": "https://api.ptagis.org/reporting/reports/jankeny/file/TPU_TAGGING_2025.csv",
+    "notes": ""
+  },
+  {
+    "repo": "NR-2025-002-ptagis-tagging-to-snowflake",
+    "project_key": "NR-2025-002-ptagis-tagging-to-snowflake",
+    "project_name": "NR-2025-002-ptagis-tagging-to-snowflake",
+    "discovered_via": "data_assets",
+    "source_name": "PWR.FISH.ADMIN_PASSAGE_PTAGIS_TAGGING",
+    "system": "Snowflake",
+    "type": "Database",
+    "url": "https://app.snowflake.com/mjajtac/tacoma/#/data/databases/PWR/schemas/FISH/table/ADMIN_PASSAGE_PTAGIS_TAGGING",
+    "notes": ""
+  }
+]
