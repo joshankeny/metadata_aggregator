@@ -64,5 +64,27 @@
     "type": "Database",
     "url": "https://app.snowflake.com/mjajtac/tacoma/#/data/databases/PWR/schemas/FISH/table/ADMIN_PASSAGE_PTAGIS_TAGGING",
     "notes": ""
+  },
+  {
+    "repo": "NR-2025-003-testing-for-lindsay",
+    "project_key": "NR-2025-003-testing-for-lindsay",
+    "project_name": "NR-2025-003-testing-for-lindsay",
+    "discovered_via": "data_assets",
+    "source_name": "GIS_data",
+    "system": "GIS",
+    "type": "spatial",
+    "url": "sagsdgsdg.com",
+    "notes": ""
+  },
+  {
+    "repo": "NR-2025-003-testing-for-lindsay",
+    "project_key": "NR-2025-003-testing-for-lindsay",
+    "project_name": "NR-2025-003-testing-for-lindsay",
+    "discovered_via": "data_assets",
+    "source_name": "Lindsay_Snowflake_Data",
+    "system": "Snowflake",
+    "type": "tabular",
+    "url": "asdfasdfasdf.com",
+    "notes": ""
   }
 ]
