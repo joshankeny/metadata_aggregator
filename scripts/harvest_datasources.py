@@ -48,7 +48,7 @@ def harvest():
                 "source_name": s["name"],
                 "system": s["system"],
                 "type": s["type"],
-                "uri": s["uri"],
+                "url": s["url"],
                 "notes": ""
             })
 
