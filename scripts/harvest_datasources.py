@@ -86,7 +86,7 @@ def write_outputs(rows):
     # CSV
     csv_path = OUTDIR / "datasources.csv"
     cols = ["repo","project_key","project_name","discovered_via","source_name","system","type","uri","notes"]
-    with open(csv_path, "w", encoding="utf-8", newline=")") as f:
+    with open(csv_path, "w", encoding="utf-8", newline="") as f:
         w = csv.DictWriter(f, fieldnames=cols)
         w.writeheader()
         for r in rows:
