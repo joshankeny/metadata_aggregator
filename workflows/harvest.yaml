@@ -1,33 +1,62 @@
-name: Harvest Project YAMLs
+name: Build data-source table
 on:
-schedule:
-- cron: "0 * * * *" # hourly
-workflow_dispatch:
+  schedule:
+    - cron: "0 * * * *"  # hourly
+  workflow_dispatch:
+
 jobs:
-harvest:
-runs-on: ubuntu-latest
-permissions:
-contents: read
-steps:
-- uses: actions/checkout@v4
-- name: List & clone org repos
-env:
-GH_TOKEN: ${{ secrets.ORG_READ_TOKEN }}
-ORG: ${{ github.repository_owner }}
-run: |
-mkdir -p repos && cd repos
-gh repo list "$ORG" --limit 200 --json name | jq -r '.[].name' \
-| while read R; do gh repo clone "$ORG/$R" "$R" || true; done
-- name: Harvest → Snowflake
-uses: actions/setup-python@v5
-with: { python-version: '3.11' }
-- run: pip install -r requirements.txt
-- env:
-SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
-SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
-SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
-SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
-SNOWFLAKE_DATABASE: PWR_DEV
-SNOWFLAKE_SCHEMA: FISH
-run: python scripts/harvest.py
+  harvest:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # to commit the dist files
+    env:
+      OWNER: ${{ github.repository_owner }}   # set to 'tacoma-power' when you move to org
+      REPO_PREFIX: NR-
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: pip install -r requirements.txt
+
+      - name: Clone NR repos (shallow)
+        env:
+          GH_TOKEN: ${{ secrets.ORG_READ_TOKEN }}
+        run: |
+          python - <<'PY'
+          import os, subprocess, json, pathlib
+          owner = os.getenv("OWNER")
+          prefix = os.getenv("REPO_PREFIX","NR-")
+          out = subprocess.check_output(['gh','repo','list',owner,'--limit','1000','--json','name'], text=True)
+          names = [r['name'] for r in json.loads(out) if r['name'].startswith(prefix)]
+          print(f"NR repos: {len(names)}")
+          root = pathlib.Path("repos"); root.mkdir(exist_ok=True)
+          for n in names:
+              dest = root / n
+              if dest.exists(): 
+                  print("skip", n); continue
+              subprocess.call(['gh','repo','clone',f"{owner}/{n}",str(dest),'--','--depth=1'])
+          PY
+
+      - name: Build table
+        run: python scripts/harvest_datasources.py
+
+      - name: Commit artifacts (if changed)
+        run: |
+          set -e
+          if git diff --quiet -- dist; then
+            echo "No changes to dist/*"
+            exit 0
+          fi
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add dist/datasources.csv dist/datasources.json
+          git commit -m "build: update datasources table"
+          git push
+
