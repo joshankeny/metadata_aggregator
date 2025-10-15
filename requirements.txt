@@ -2,4 +2,4 @@ pyvis
 networkx
 matplotlib
 jinja2
-
+pyyaml
