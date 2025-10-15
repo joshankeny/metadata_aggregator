@@ -1,0 +1,38 @@
+name: Build & Publish Graph
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "15 * * * *"  # optional: hourly +15min, after your harvest job
+
+jobs:
+  graph:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+
+      - name: Install deps
+        run: |
+          pip install pyvis networkx matplotlib
+
+      - name: Build graph artifacts
+        run: |
+          python scripts/build_graph.py
+          ls -la docs assets
+
+      - name: Commit graph (if changed)
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add -A docs assets
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "graph: update docs/graph.html & assets/graph.png"
+          git push
