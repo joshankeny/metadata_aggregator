@@ -1,7 +1,7 @@
 import os, json, csv, pathlib, yaml
 
 ROOT = pathlib.Path("repos")
-OUTDIR = pathlib.Path("dist")
+OUTDIR = pathlib.Path("data")
 OUTDIR.mkdir(exist_ok=True, parents=True)
 
 def normalize_source(src):
