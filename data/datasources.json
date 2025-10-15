@@ -64,5 +64,27 @@
     "type": "Database",
     "url": "https://app.snowflake.com/mjajtac/tacoma/#/data/databases/PWR/schemas/FISH/table/ADMIN_PASSAGE_PTAGIS_TAGGING",
     "notes": ""
+  },
+  {
+    "repo": "NR-2025-003-testing",
+    "project_key": "NR-2025-003-testing",
+    "project_name": "NR-2025-003-testing",
+    "discovered_via": "data_assets",
+    "source_name": "FME_test",
+    "system": "FME",
+    "type": "not real",
+    "url": null,
+    "notes": ""
+  },
+  {
+    "repo": "NR-2025-003-testing",
+    "project_key": "NR-2025-003-testing",
+    "project_name": "NR-2025-003-testing",
+    "discovered_via": "data_assets",
+    "source_name": "None",
+    "system": "None",
+    "type": "None",
+    "url": null,
+    "notes": ""
   }
 ]
