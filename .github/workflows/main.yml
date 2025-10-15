@@ -49,22 +49,19 @@ jobs:
 
       - name: Show generated files
         run: |
-          echo "== data directory =="
-          ls -laR data || true
-          echo "== CSV head =="
-          head -n 20 data/datasources.csv || true
+          echo "== data directory ==" && ls -laR data || true
+          echo "== datasources head ==" && head -n 20 data/datasources.csv || true
+          echo "== lineage head ==" && head -n 20 data/lineage.csv || true
       
       - name: Commit artifacts (if changed)
         run: |
           set -e
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          # Stage new + modified files (untracked included)
           git add -A data
-          # Only commit if there is something staged
           if git diff --cached --quiet; then
             echo "No changes to commit"
             exit 0
           fi
-          git commit -m "build: update datasources table"
+          git commit -m "build: update datasources & lineage tables"
           git push
