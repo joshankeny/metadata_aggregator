@@ -73,7 +73,7 @@ for n, data in G.nodes(data=True):
         node["shape"] = "dot"
         node["size"] = 12
 
-net.show(str(DOCS_DIR / "graph.html"))
+net.write_html(str(DOCS_DIR / "graph.html"), notebook=False, open_browser=False)
 
 # --------- Build static PNG (NetworkX) ----------
 plt.figure(figsize=(10, 8))
