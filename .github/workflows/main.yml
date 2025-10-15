@@ -50,12 +50,12 @@ jobs:
       - name: Commit artifacts (if changed)
         run: |
           set -e
-          if git diff --quiet -- dist; then
+          if git diff --quiet -- data; then
             echo "No changes to dist/*"
             exit 0
           fi
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add dist/datasources.csv dist/datasources.json
+          git add data/datasources.csv data/datasources.json
           git commit -m "build: update datasources table"
           git push
