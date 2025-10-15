@@ -1,0 +1,24 @@
+[
+  {
+    "repo": "NR-2025-001-ptagis-recap-to-snowflake",
+    "project_key": "NR-2025-001-ptagis-recap-to-snowflake",
+    "project_name": "NR-2025-001-ptagis-recap-to-snowflake",
+    "src": "PTAGIS_RECAP_2025",
+    "dst": "PWR.FISH.ADMIN_PASSAGE_PTAGIS_RECAP",
+    "tool": "GEN_NR_ADMIN_PASSAGE_PTAGIS_RECAP_DAILY_2025.fmw",
+    "frequency": "Daily",
+    "description": null,
+    "notes": ""
+  },
+  {
+    "repo": "NR-2025-002-ptagis-tagging-to-snowflake",
+    "project_key": "NR-2025-002-ptagis-tagging-to-snowflake",
+    "project_name": "NR-2025-002-ptagis-tagging-to-snowflake",
+    "src": "PTAGIS_TAGGING_2025",
+    "dst": "PWR.FISH.ADMIN_PASSAGE_PTAGIS_TAGGING",
+    "tool": "GEN_NR_ADMIN_PASSAGE_PTAGIS_TAGGING_DAILY_2025.fmw",
+    "frequency": "Daily",
+    "description": null,
+    "notes": ""
+  }
+]
