@@ -36,7 +36,7 @@ def harvest():
         # 1) from data_assets.sources
         for src in (data.get("data_assets", {}) or {}).get("sources", []) or []:
             s = normalize_source(src)
-            skey = (repo, ("data_assets", s["name"], s["system"], s["type"], s["uri"]))
+            skey = (repo, ("data_assets", s["name"], s["system"], s["type"], s["url"]))
             if skey in seen:
                 continue
             seen.add(skey)
