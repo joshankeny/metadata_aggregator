@@ -74,7 +74,7 @@ def harvest():
                 "source_name": src_name,
                 "system": None,
                 "type": None,
-                "uri": None,
+                "url": None,
                 "notes": ""
             })
 
@@ -85,7 +85,7 @@ def harvest():
 def write_outputs(rows):
     # CSV
     csv_path = OUTDIR / "datasources.csv"
-    cols = ["repo","project_key","project_name","discovered_via","source_name","system","type","uri","notes"]
+    cols = ["repo","project_key","project_name","discovered_via","source_name","system","type","url","notes"]
     with open(csv_path, "w", encoding="utf-8", newline="") as f:
         w = csv.DictWriter(f, fieldnames=cols)
         w.writeheader()
