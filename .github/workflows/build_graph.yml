@@ -29,10 +29,11 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
+          # IMPORTANT: include the PyVis lib folder and index.html
           git add -A docs assets
           if git diff --cached --quiet; then
             echo "No changes to commit"
             exit 0
           fi
-          git commit -m "graph: update docs/graph.html & assets/graph.png"
+          git commit -m "graph: update docs (graph.html, index.html, lib/*) & assets/graph.png"
           git push
