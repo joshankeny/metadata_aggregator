@@ -1,11 +1,16 @@
 name: Build & Publish Graph
 on:
+  # Run right after the data table workflow completes on main
+  workflow_run:
+    workflows: ["Build data-source table"]   # <- must match exactly
+    types: [completed]
+    branches: [main]
+  # Keep manual trigger too
   workflow_dispatch:
-  schedule:
-    - cron: "15 * * * *"  # optional: hourly +15min, after your harvest job
 
 jobs:
   graph:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -17,23 +22,23 @@ jobs:
         with: { python-version: "3.11" }
 
       - name: Install deps
-        run: |
-          pip install pyvis networkx matplotlib
+        run: pip install pyvis networkx jinja2
 
       - name: Build graph artifacts
         run: |
           python scripts/build_graph.py
-          ls -la docs assets
+          ls -laR docs || true
+          ls -laR assets || true
 
       - name: Commit graph (if changed)
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          # IMPORTANT: include the PyVis lib folder and index.html
           git add -A docs assets
           if git diff --cached --quiet; then
             echo "No changes to commit"
             exit 0
           fi
-          git commit -m "graph: update docs (graph.html, index.html, lib/*) & assets/graph.png"
+          git commit -m "graph: update docs/graph.html (and index.html) & assets/graph.png"
           git push
+
