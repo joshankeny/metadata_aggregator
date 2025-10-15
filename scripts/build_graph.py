@@ -75,6 +75,12 @@ for n, data in G.nodes(data=True):
 
 net.write_html(str(DOCS_DIR / "graph.html"), notebook=False, open_browser=False)
 
+index = DOCS_DIR / "index.html"
+index.write_text(
+    '<meta http-equiv="refresh" content="0; url=graph.html">',
+    encoding="utf-8"
+)
+
 # --------- Build static PNG (NetworkX) ----------
 plt.figure(figsize=(10, 8))
 pos = nx.spring_layout(G, k=0.4, seed=42)
