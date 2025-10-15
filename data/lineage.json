@@ -31,5 +31,27 @@
     "frequency": "Daily",
     "description": null,
     "notes": ""
+  },
+  {
+    "repo": "NR-2025-004-short-title-cfff-fce-view",
+    "project_key": "NR-2025-004-short-title-cfff-fce-view",
+    "project_name": "NR-2025-004-short-title-cfff-fce-view",
+    "src": "PWR.FISH.ADMIN_PASSAGE_PTAGIS_RECAP",
+    "dst": "PWR.FISH.V_COWLITZ_PASSAGE_CFD_FCE",
+    "tool": "snowflake",
+    "frequency": "live",
+    "description": null,
+    "notes": ""
+  },
+  {
+    "repo": "NR-2025-004-short-title-cfff-fce-view",
+    "project_key": "NR-2025-004-short-title-cfff-fce-view",
+    "project_name": "NR-2025-004-short-title-cfff-fce-view",
+    "src": "PWR.FISH.ADMIN_PASSAGE_PTAGIS_TAGGING",
+    "dst": "PWR.FISH.V_COWLITZ_PASSAGE_CFD_FCE",
+    "tool": "snowflake",
+    "frequency": "live",
+    "description": null,
+    "notes": ""
   }
 ]

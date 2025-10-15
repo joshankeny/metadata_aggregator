@@ -86,5 +86,38 @@
     "type": "tabular",
     "url": "asdfasdfasdf.com",
     "notes": ""
+  },
+  {
+    "repo": "NR-2025-004-short-title-cfff-fce-view",
+    "project_key": "NR-2025-004-short-title-cfff-fce-view",
+    "project_name": "NR-2025-004-short-title-cfff-fce-view",
+    "discovered_via": "data_assets",
+    "source_name": "PWR.FISH.ADMIN_PASSAGE_PTAGIS_RECAP",
+    "system": "Snowflake",
+    "type": "Database",
+    "url": "https://app.snowflake.com/mjajtac/tacoma/#/data/databases/PWR/schemas/FISH/table/ADMIN_PASSAGE_PTAGIS_RECAP",
+    "notes": ""
+  },
+  {
+    "repo": "NR-2025-004-short-title-cfff-fce-view",
+    "project_key": "NR-2025-004-short-title-cfff-fce-view",
+    "project_name": "NR-2025-004-short-title-cfff-fce-view",
+    "discovered_via": "data_assets",
+    "source_name": "PWR.FISH.ADMIN_PASSAGE_PTAGIS_TAGGING",
+    "system": "Snowflake",
+    "type": "Database",
+    "url": "https://app.snowflake.com/mjajtac/tacoma/#/data/databases/PWR/schemas/FISH/table/ADMIN_PASSAGE_PTAGIS_TAGGING",
+    "notes": ""
+  },
+  {
+    "repo": "NR-2025-004-short-title-cfff-fce-view",
+    "project_key": "NR-2025-004-short-title-cfff-fce-view",
+    "project_name": "NR-2025-004-short-title-cfff-fce-view",
+    "discovered_via": "data_assets",
+    "source_name": "PWR.FISH.V_COWLITZ_PASSAGE_CFD_FCE",
+    "system": "Snowflake",
+    "type": "Database",
+    "url": "https://app.snowflake.com/mjajtac/tacoma/#/data/databases/PWR/schemas/FISH/view/V_COWLITZ_PASSAGE_CFD_FCE",
+    "notes": ""
   }
 ]
