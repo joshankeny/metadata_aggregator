@@ -5,16 +5,17 @@ OUTDIR = pathlib.Path("data")
 OUTDIR.mkdir(exist_ok=True, parents=True)
 
 def normalize_source(src):
-    # expect keys like: name, type, system, uri
+    # expected keys: name, system, type, url  (back-compat: uri)
+    url = src.get("url", src.get("uri"))
     return {
-        "name": str(src.get("name","")).strip() or None,
-        "system": str(src.get("system","")).strip() or None,
-        "type": str(src.get("type","")).strip() or None,
-        "url": str(src.get("url","")).strip() or None,
+        "name": (str(src.get("name","")).strip() or None),
+        "system": (str(src.get("system","")).strip() or None),
+        "type": (str(src.get("type","")).strip() or None),
+        "url": (str(url).strip() if url is not None else None),
     }
 
 def iter_projects():
-    for repo_dir in sorted([p for p in ROOT.iterdir() if p.is_dir()]):
+    for repo_dir in sorted(p for p in ROOT.iterdir() if p.is_dir()):
         y = repo_dir / "project.yaml"
         if not y.exists():
             continue
@@ -26,18 +27,15 @@ def iter_projects():
         proj = data.get("project", {}) or {}
         yield repo_dir.name, proj, data
 
-def harvest():
-    rows = []
-    seen = set()  # de-duplicate by (repo, source_key)
+def harvest_sources():
+    rows, seen = [], set()
     for repo, proj, data in iter_projects():
         key = (proj.get("key") or repo)
         name = proj.get("name") or repo
-
-        # 1) from data_assets.sources
         for src in (data.get("data_assets", {}) or {}).get("sources", []) or []:
             s = normalize_source(src)
-            skey = (repo, ("data_assets", s["name"], s["system"], s["type"], s["url"]))
-            if skey in seen:
+            skey = (repo, s["name"], s["system"], s["type"], s["url"])
+            if skey in seen: 
                 continue
             seen.add(skey)
             rows.append({
@@ -51,55 +49,64 @@ def harvest():
                 "url": s["url"],
                 "notes": ""
             })
+    rows.sort(key=lambda r: (r["repo"], r["source_name"] or ""))
+    return rows
 
-        # 2) from lineage.edges 'from' (use as sources if not already present)
+def harvest_lineage():
+    rows, seen = [], set()
+    for repo, proj, data in iter_projects():
+        key = (proj.get("key") or repo)
+        name = proj.get("name") or repo
         edges = (data.get("lineage", {}) or {}).get("edges", []) or []
         for e in edges:
-            src_name = str(e.get("from","")).strip()
-            if not src_name:
+            src = (e.get("from") or "").strip()
+            dst = (e.get("to") or "").strip()
+            tool = (e.get("tool") or "").strip() or None
+            freq = (e.get("frequency") or "").strip() or None
+            desc = (e.get("description") or "").strip() or None
+            if not src or not dst:
                 continue
-            skey = (repo, ("lineage", src_name))
-            if skey in seen:
+            ek = (repo, src, dst, tool, freq, desc)
+            if ek in seen:
                 continue
-            # try to avoid duping if the exact name already appeared in data_assets
-            has_same_name = any(r["repo"]==repo and r["source_name"]==src_name for r in rows)
-            if has_same_name:
-                continue
-            seen.add(skey)
+            seen.add(ek)
             rows.append({
                 "repo": repo,
                 "project_key": key,
                 "project_name": name,
-                "discovered_via": "lineage",
-                "source_name": src_name,
-                "system": None,
-                "type": None,
-                "url": None,
+                "src": src,
+                "dst": dst,
+                "tool": tool,
+                "frequency": freq,
+                "description": desc,
                 "notes": ""
             })
-
-    # sort for stable diffs
-    rows.sort(key=lambda r: (r["repo"], r["source_name"] or "", r["discovered_via"]))
+    rows.sort(key=lambda r: (r["repo"], r["src"], r["dst"]))
     return rows
 
-def write_outputs(rows):
-    # CSV
+def write_outputs(sources, edges):
+    # datasources.csv/json
     csv_path = OUTDIR / "datasources.csv"
-    cols = ["repo","project_key","project_name","discovered_via","source_name","system","type","url","notes"]
+    src_cols = ["repo","project_key","project_name","discovered_via","source_name","system","type","url","notes"]
     with open(csv_path, "w", encoding="utf-8", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=cols)
-        w.writeheader()
-        for r in rows:
-            w.writerow({k: ("" if r[k] is None else r[k]) for k in cols})
+        w = csv.DictWriter(f, fieldnames=src_cols); w.writeheader()
+        for r in sources: w.writerow({k: ("" if r.get(k) is None else r.get(k)) for k in src_cols})
+    with open(OUTDIR / "datasources.json", "w", encoding="utf-8") as f:
+        json.dump(sources, f, ensure_ascii=False, indent=2)
 
-    # JSON
-    json_path = OUTDIR / "datasources.json"
-    with open(json_path, "w", encoding="utf-8") as f:
-        json.dump(rows, f, ensure_ascii=False, indent=2)
+    # lineage.csv/json
+    lin_path = OUTDIR / "lineage.csv"
+    lin_cols = ["repo","project_key","project_name","src","dst","tool","frequency","description","notes"]
+    with open(lin_path, "w", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=lin_cols); w.writeheader()
+        for r in edges: w.writerow({k: ("" if r.get(k) is None else r.get(k)) for k in lin_cols})
+    with open(OUTDIR / "lineage.json", "w", encoding="utf-8") as f:
+        json.dump(edges, f, ensure_ascii=False, indent=2)
 
-    print(f"Wrote {csv_path} and {json_path}")
+    print(f"Wrote {csv_path} and {lin_path}")
+    print(f"Totals → sources: {len(sources)}, edges: {len(edges)}")
 
 if __name__ == "__main__":
-    rows = harvest()
-    write_outputs(rows)
-    print(f"Total sources: {len(rows)}")
+    sources = harvest_sources()
+    edges = harvest_lineage()
+    write_outputs(sources, edges)
