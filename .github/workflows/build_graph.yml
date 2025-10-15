@@ -1,16 +1,23 @@
 name: Build & Publish Graph
+
 on:
-  # Run right after the data table workflow completes on main
+  # Chain after the data workflow completes
   workflow_run:
-    workflows: ["Build data-source table"]   # <- must match exactly
+    workflows: ["Build data-source table"]   # must match the other workflow's `name:`
     types: [completed]
-    branches: [main]
-  # Keep manual trigger too
+  # Allow manual runs too
   workflow_dispatch:
 
 jobs:
   graph:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    # Run if:
+    #  - manual dispatch, OR
+    #  - workflow_run that succeeded (and only from main)
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'workflow_run' &&
+       github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_branch == 'main')
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -27,8 +34,8 @@ jobs:
       - name: Build graph artifacts
         run: |
           python scripts/build_graph.py
-          ls -laR docs || true
-          ls -laR assets || true
+          echo "== docs ==" && ls -laR docs || true
+          echo "== assets ==" && ls -laR assets || true
 
       - name: Commit graph (if changed)
         run: |
