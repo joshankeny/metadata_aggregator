@@ -66,28 +66,6 @@
     "notes": ""
   },
   {
-    "repo": "NR-2025-003-testing-for-lindsay",
-    "project_key": "NR-2025-003-testing-for-lindsay",
-    "project_name": "NR-2025-003-testing-for-lindsay",
-    "discovered_via": "data_assets",
-    "source_name": "GIS_data",
-    "system": "GIS",
-    "type": "spatial",
-    "url": "sagsdgsdg.com",
-    "notes": ""
-  },
-  {
-    "repo": "NR-2025-003-testing-for-lindsay",
-    "project_key": "NR-2025-003-testing-for-lindsay",
-    "project_name": "NR-2025-003-testing-for-lindsay",
-    "discovered_via": "data_assets",
-    "source_name": "Lindsay_Snowflake_Data",
-    "system": "Snowflake",
-    "type": "tabular",
-    "url": "asdfasdfasdf.com",
-    "notes": ""
-  },
-  {
     "repo": "NR-2025-004-short-title-cfff-fce-view",
     "project_key": "NR-2025-004-short-title-cfff-fce-view",
     "project_name": "NR-2025-004-short-title-cfff-fce-view",

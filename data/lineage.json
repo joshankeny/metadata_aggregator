@@ -22,17 +22,6 @@
     "notes": ""
   },
   {
-    "repo": "NR-2025-003-testing-for-lindsay",
-    "project_key": "NR-2025-003-testing-for-lindsay",
-    "project_name": "NR-2025-003-testing-for-lindsay",
-    "src": "Lindsay_Snowflake_Data",
-    "dst": "GIS_data",
-    "tool": "fme",
-    "frequency": "Daily",
-    "description": null,
-    "notes": ""
-  },
-  {
     "repo": "NR-2025-004-short-title-cfff-fce-view",
     "project_key": "NR-2025-004-short-title-cfff-fce-view",
     "project_name": "NR-2025-004-short-title-cfff-fce-view",

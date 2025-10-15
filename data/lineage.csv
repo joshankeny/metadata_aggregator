@@ -1,6 +1,5 @@
 repo,project_key,project_name,src,dst,tool,frequency,description,notes
 NR-2025-001-ptagis-recap-to-snowflake,NR-2025-001-ptagis-recap-to-snowflake,NR-2025-001-ptagis-recap-to-snowflake,PTAGIS_RECAP_2025,PWR.FISH.ADMIN_PASSAGE_PTAGIS_RECAP,GEN_NR_ADMIN_PASSAGE_PTAGIS_RECAP_DAILY_2025.fmw,Daily,,
 NR-2025-002-ptagis-tagging-to-snowflake,NR-2025-002-ptagis-tagging-to-snowflake,NR-2025-002-ptagis-tagging-to-snowflake,PTAGIS_TAGGING_2025,PWR.FISH.ADMIN_PASSAGE_PTAGIS_TAGGING,GEN_NR_ADMIN_PASSAGE_PTAGIS_TAGGING_DAILY_2025.fmw,Daily,,
-NR-2025-003-testing-for-lindsay,NR-2025-003-testing-for-lindsay,NR-2025-003-testing-for-lindsay,Lindsay_Snowflake_Data,GIS_data,fme,Daily,,
 NR-2025-004-short-title-cfff-fce-view,NR-2025-004-short-title-cfff-fce-view,NR-2025-004-short-title-cfff-fce-view,PWR.FISH.ADMIN_PASSAGE_PTAGIS_RECAP,PWR.FISH.V_COWLITZ_PASSAGE_CFD_FCE,snowflake,live,,
 NR-2025-004-short-title-cfff-fce-view,NR-2025-004-short-title-cfff-fce-view,NR-2025-004-short-title-cfff-fce-view,PWR.FISH.ADMIN_PASSAGE_PTAGIS_TAGGING,PWR.FISH.V_COWLITZ_PASSAGE_CFD_FCE,snowflake,live,,
