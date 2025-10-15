@@ -47,15 +47,24 @@ jobs:
       - name: Build table
         run: python scripts/harvest_datasources.py
 
+      - name: Show generated files
+        run: |
+          echo "== data directory =="
+          ls -laR data || true
+          echo "== CSV head =="
+          head -n 20 data/datasources.csv || true
+      
       - name: Commit artifacts (if changed)
         run: |
           set -e
-          if git diff --quiet -- data; then
-            echo "No changes to dist/*"
-            exit 0
-          fi
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add data/datasources.csv data/datasources.json
+          # Stage new + modified files (untracked included)
+          git add -A data
+          # Only commit if there is something staged
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
           git commit -m "build: update datasources table"
           git push
