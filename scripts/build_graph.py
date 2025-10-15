@@ -1,41 +1,15 @@
+# scripts/build_graph.py
 import csv, pathlib
-from collections import defaultdict
 import networkx as nx
-
-# For interactive HTML
 from pyvis.network import Network
-
-# For static PNG
 import matplotlib.pyplot as plt
 
-ROOT = pathlib.Path(".")
-DATASOURCES = ROOT / "data" / "datasources.csv"
-LINEAGE     = ROOT / "data" / "lineage.csv"
-DOCS_DIR    = ROOT / "docs"
-ASSETS_DIR  = ROOT / "assets"
-DOCS_DIR.mkdir(exist_ok=True, parents=True)
-ASSETS_DIR.mkdir(exist_ok=True, parents=True)
+LINEAGE = pathlib.Path("data/lineage.csv")
+DOCS    = pathlib.Path("docs");  DOCS.mkdir(parents=True, exist_ok=True)
+ASSETS  = pathlib.Path("assets"); ASSETS.mkdir(parents=True, exist_ok=True)
 
+# 1) Build a directed graph from lineage.csv (src,dst)
 G = nx.DiGraph()
-
-# Load datasources -> create Asset nodes (and remember project names)
-projects = {}           # key -> name
-assets_by_project = defaultdict(set)
-
-if DATASOURCES.exists():
-    with DATASOURCES.open(newline="", encoding="utf-8") as f:
-        r = csv.DictReader(f)
-        for row in r:
-            pkey = row.get("project_key") or row.get("repo")
-            pname = row.get("project_name") or pkey
-            projects[pkey] = pname
-            src = row.get("source_name")
-            if not src:
-                continue
-            G.add_node(src, label=src, kind="Asset", system=row.get("system"), type=row.get("type"))
-            assets_by_project[pkey].add(src)
-
-# Load lineage -> FEEDS edges between assets
 if LINEAGE.exists():
     with LINEAGE.open(newline="", encoding="utf-8") as f:
         r = csv.DictReader(f)
@@ -44,59 +18,45 @@ if LINEAGE.exists():
             dst = (row.get("dst") or "").strip()
             if not src or not dst:
                 continue
-            G.add_node(src, label=src, kind="Asset")
-            G.add_node(dst, label=dst, kind="Asset")
-            G.add_edge(src, dst, tool=row.get("tool"), frequency=row.get("frequency"), description=row.get("description"))
-            pkey = row.get("project_key") or row.get("repo")
-            if pkey:
-                assets_by_project[pkey].update([src, dst])
+            # De-dup automatically handled by NetworkX; just add
+            G.add_node(src, kind="Asset", label=src)
+            G.add_node(dst, kind="Asset", label=dst)
+            G.add_edge(src, dst)  # ignore tool/frequency/description on purpose
+else:
+    # still write a tiny placeholder page so Pages deploys
+    (DOCS / "index.html").write_text(
+        "<h1>No lineage.csv found</h1><p>Place a data/lineage.csv with src,dst headers.</p>",
+        encoding="utf-8"
+    )
+    raise SystemExit("No data/lineage.csv; wrote placeholder index.html")
 
-# Optionally create Project nodes and connect to Assets (helps navigation)
-for pkey, pname in projects.items():
-    pnode = f"Project::{pkey}"
-    G.add_node(pnode, label=pname, kind="Project")
-    for a in assets_by_project.get(pkey, []):
-        G.add_edge(pnode, a, rel="USES")
-
-# --------- Build interactive HTML (PyVis) ----------
+# 2) Interactive HTML (PyVis)
 net = Network(height="800px", width="100%", directed=True, bgcolor="#ffffff")
 net.from_nx(G)
 
-# Simple styling: Projects as squares, Assets as dots
+# Uniform styling for assets
 for n, data in G.nodes(data=True):
-    if data.get("kind") == "Project":
-        node = net.get_node(n)
-        node["shape"] = "box"
-        node["color"] = {"border": "#333333", "background": "#E6F0FF"}
-    else:
-        node = net.get_node(n)
-        node["shape"] = "dot"
-        node["size"] = 12
+    node = net.get_node(n)
+    node["shape"] = "dot"
+    node["size"]  = 12
 
-net.write_html(str(DOCS_DIR / "graph.html"), notebook=False, open_browser=False)
+out_html = DOCS / "graph.html"
+net.write_html(str(out_html), notebook=False, open_browser=False)
 
-index = DOCS_DIR / "index.html"
-index.write_text(
-    '<meta http-equiv="refresh" content="0; url=graph.html">',
-    encoding="utf-8"
+# Root redirect so https://<user>.github.io/<repo>/ works
+(DOCS / "index.html").write_text(
+    '<meta http-equiv="refresh" content="0; url=graph.html">', encoding="utf-8"
 )
 
-# --------- Build static PNG (NetworkX) ----------
+# 3) Static PNG (NetworkX)
 plt.figure(figsize=(10, 8))
 pos = nx.spring_layout(G, k=0.4, seed=42)
-proj_nodes = [n for n, d in G.nodes(data=True) if d.get("kind") == "Project"]
-asset_nodes = [n for n in G if n not in proj_nodes]
-
-nx.draw_networkx_nodes(G, pos, nodelist=asset_nodes)
-nx.draw_networkx_nodes(G, pos, nodelist=proj_nodes, node_shape="s")
+nx.draw_networkx_nodes(G, pos)
 nx.draw_networkx_edges(G, pos, arrows=True, arrowstyle="->", arrowsize=10, width=1)
-# label a subset to avoid clutter
-labels = {n: G.nodes[n].get("label", n) for n in list(G.nodes)[:50]}
+# label up to 50 nodes to avoid clutter
+labels = {n: n for i, n in enumerate(G.nodes()) if i < 50}
 nx.draw_networkx_labels(G, pos, labels=labels, font_size=8)
+plt.axis("off"); plt.tight_layout()
+plt.savefig(str(ASSETS / "graph.png"), dpi=150); plt.close()
 
-plt.axis("off")
-plt.tight_layout()
-plt.savefig(str(ASSETS_DIR / "graph.png"), dpi=150)
-plt.close()
-
-print("Wrote docs/graph.html and assets/graph.png")
+print(f"Wrote {out_html} and assets/graph.png (nodes={G.number_of_nodes()}, edges={G.number_of_edges()})")
