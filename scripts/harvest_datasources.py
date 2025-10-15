@@ -10,7 +10,7 @@ def normalize_source(src):
         "name": str(src.get("name","")).strip() or None,
         "system": str(src.get("system","")).strip() or None,
         "type": str(src.get("type","")).strip() or None,
-        "uri": str(src.get("uri","")).strip() or None,
+        "url": str(src.get("url","")).strip() or None,
     }
 
 def iter_projects():
