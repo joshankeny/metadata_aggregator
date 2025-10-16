@@ -97,5 +97,16 @@
     "type": "Database",
     "url": "https://app.snowflake.com/mjajtac/tacoma/#/data/databases/PWR/schemas/FISH/view/V_COWLITZ_PASSAGE_CFD_FCE",
     "notes": ""
+  },
+  {
+    "repo": "NR-2025-005-test",
+    "project_key": "NR-2025-005-test",
+    "project_name": "NR-2025-005-test",
+    "discovered_via": "data_assets",
+    "source_name": "None",
+    "system": "None",
+    "type": "None",
+    "url": null,
+    "notes": ""
   }
 ]
